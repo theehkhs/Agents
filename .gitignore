@@ -1,0 +1,6 @@
+env
+.env
+thuto_chat_ui/node_modules
+# Local Netlify folder
+.netlify
+UsersjoeyaAppDataLocalProgramsPythonPython39libsite-packages
