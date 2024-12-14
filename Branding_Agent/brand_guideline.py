@@ -61,11 +61,11 @@ def main():
 
     # Collect user inputs interactively
     print("Please provide the following details about your company:\n")
-    company_name = input("1. What is the name of your company? ").strip()
-    industry = input("2. What industry does your company operate in? ").strip()
-    target_audience = input("3. Who is your target audience? ").strip()
-    core_values = input("4. What are your company's core values? (e.g., Innovation, Accessibility) ").strip()
-    brand_tone = input("5. How would you describe your brand's tone? (e.g., Professional, Friendly) ").strip()
+    company_name = input("User: 1. What is the name of your company? \nTHUTO: ").strip()
+    industry = input("User: 2. What industry does your company operate in? \nTHUTO: ").strip()
+    target_audience = input("User: 3. Who is your target audience? \nTHUTO: ").strip()
+    core_values = input("User: 4. What are your company's core values? (e.g., Innovation, Accessibility) \nTHUTO: ").strip()
+    brand_tone = input("User: 5. How would you describe your brand's tone? (e.g., Professional, Friendly) \nTHUTO: ").strip()
 
     # Organize inputs into a dictionary
     user_inputs = {
