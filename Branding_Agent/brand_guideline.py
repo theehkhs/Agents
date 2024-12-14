@@ -1,69 +1,83 @@
-"""This script generates brand guidelines documents for users by collecting their 
-brand details (name, tone of voice, colors, typography, logo usage, etc.) and 
-using OpenAI's API to create a professional and cohesive brand guidelines document."""
-
 import openai
-import os
+from openai import OpenAI
+from dotenv import load_dotenv
 
-# Set up OpenAI API key
-openai.api_key = "your_openai_api_key"
+load_dotenv()
 
-def get_user_inputs():
-    """Prompt the user for brand information."""
-    print("\n✨ Welcome to the Brand Guidelines Generator! ✨\n")
-    brand_name = input("📛 Enter your brand name: ")
-    tagline = input("🎯 Enter your brand's tagline or slogan: ")
-    tone_of_voice = input("🗣️ Describe the tone of voice for your brand (e.g., friendly, professional, fun): ")
-    primary_colors = input("🎨 Enter your brand's primary colors (e.g., Red, Blue, Green): ")
-    typography_style = input("🔤 Describe your typography style (e.g., modern, classic, bold): ")
-    logo_usage_guidelines = input("📐 Describe how your logo should be used (e.g., spacing, placement, color variations): ")
+def generate_streamed_guidelines(user_inputs):
+    """
+    Streams professional brand guidelines based on user inputs.
 
-    return {
-        "brand_name": brand_name,
-        "tagline": tagline,
-        "tone_of_voice": tone_of_voice,
-        "primary_colors": primary_colors,
-        "typography_style": typography_style,
-        "logo_usage_guidelines": logo_usage_guidelines,
-    }
+    Args:
+        user_inputs (dict): A dictionary containing user input values such as company name,
+                           industry, target audience, and more.
 
-def generate_brand_guidelines(user_inputs):
-    """Use OpenAI API to generate brand guidelines."""
-    print("\n⏳ Generating your brand guidelines... Please wait...\n")
-    prompt = (
-        f"Generate a brand guidelines document based on the following information:\n"
-        f"Brand Name: {user_inputs['brand_name']}\n"
-        f"Tagline: {user_inputs['tagline']}\n"
-        f"Tone of Voice: {user_inputs['tone_of_voice']}\n"
-        f"Primary Colors: {user_inputs['primary_colors']}\n"
-        f"Typography Style: {user_inputs['typography_style']}\n"
-        f"Logo Usage Guidelines: {user_inputs['logo_usage_guidelines']}\n\n"
-        f"The document should include sections on tone of voice, logo usage, typography, and color schemes."
-    )
+    Returns:
+        None
+    """
+    prompt = f"""
+    You are an expert branding consultant. Generate professional brand guidelines based on the following inputs:
+    {user_inputs}
+    Include sections like mission, vision, typography, color palette, logo usage, and brand voice.
+    """
 
-    response = openai.Completion.create(
-        engine="text-davinci-003",  # Using the Davinci engine for better quality
-        prompt=prompt,
-        max_tokens=500,
-        temperature=0.7,
-    )
+    client = OpenAI()
+    output = ""
 
-    return response.choices[0].text.strip()
+    try:
+        # Stream the response
+        print("\n⏳ Loading brand guidelines, please wait...\n")
+        stream = client.chat.completions.create(
+            model="gpt-4",  # Adjust the model as needed
+            messages=[{"role": "user", "content": prompt}],
+            stream=True,
+        )
+
+        # Append streamed chunks to output
+        for chunk in stream:
+            content = chunk.choices[0].delta.content if hasattr(chunk.choices[0].delta, 'content') else ""
+            if content is None:
+                content = ""
+            output += content
+
+        print("\n\n✅ All brand guidelines have been successfully loaded.")
+
+        # Save the output to a text file
+        company_name = user_inputs.get("company_name", "Unknown_Company").replace(" ", "_")
+        filename = f"{company_name}_Brand_Guidelines.txt"
+
+        with open(filename, "w") as file:
+            file.write(output)
+
+        print(f"\n📁 Brand guidelines saved to: {filename}")
+        print("\n✅ File has been successfully uploaded.")
+
+    except Exception as e:
+        print(f"\n❌ Error streaming brand guidelines: {e}")
 
 def main():
-    """Main function to run the script."""
-    user_inputs = get_user_inputs()
-    brand_guidelines = generate_brand_guidelines(user_inputs)
-    print("\n🎉 Here are your brand guidelines: 🎉\n")
-    print(brand_guidelines)
+    """Main function to interactively collect user inputs and generate brand guidelines."""
+    print("\n💬 Welcome to the Brand Guidelines Generator!\n")
 
-    # Optionally save to a file
-    save_option = input("\n💾 Would you like to save the guidelines to a file? (yes/no): ").strip().lower()
-    if save_option == "yes":
-        filename = f"{user_inputs['brand_name'].replace(' ', '_')}_Brand_Guidelines.txt"
-        with open(filename, "w") as file:
-            file.write(brand_guidelines)
-        print(f"✅ Brand guidelines saved as {filename}")
+    # Collect user inputs interactively
+    print("Please provide the following details about your company:\n")
+    company_name = input("1. What is the name of your company? ").strip()
+    industry = input("2. What industry does your company operate in? ").strip()
+    target_audience = input("3. Who is your target audience? ").strip()
+    core_values = input("4. What are your company's core values? (e.g., Innovation, Accessibility) ").strip()
+    brand_tone = input("5. How would you describe your brand's tone? (e.g., Professional, Friendly) ").strip()
+
+    # Organize inputs into a dictionary
+    user_inputs = {
+        "company_name": company_name,
+        "industry": industry,
+        "target_audience": target_audience,
+        "core_values": core_values,
+        "brand_tone": brand_tone,
+    }
+
+    # Stream brand guidelines
+    generate_streamed_guidelines(user_inputs)
 
 if __name__ == "__main__":
     main()
