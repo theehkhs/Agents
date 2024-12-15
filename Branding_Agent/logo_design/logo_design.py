@@ -1,6 +1,7 @@
 import openai
 from openai import OpenAI
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -18,16 +19,23 @@ def generate_logos(user_inputs):
     client = OpenAI()
 
     prompt = f"""
-    Create a visually stunning logo for the following company:
-    Company Name: {user_inputs['company_name']}
-    Industry: {user_inputs['industry']}
-    Mission: {user_inputs['mission_statement']}
-    Style: {user_inputs['preferred_style']}
-    Color Palette: {user_inputs['main_color']}
-    Shapes/Icons: {user_inputs['preferred_shapes']}
-    Font Style: {user_inputs['preferred_font_style']}
-    Brand Tone: {user_inputs['brand_tone']}
-    Ensure the design reflects innovation and professionalism.
+    Design a high-quality, professional, standalone logo for a company:
+    - **Company Name**: {user_inputs['company_name']}
+    - **Industry**: {user_inputs['industry']}
+    - **Mission**: {user_inputs['mission_statement']}
+    - **Preferred Style**: {user_inputs['preferred_style']}
+    - **Primary Colors**: {user_inputs['main_color']}
+    - **Icon/Shape Preferences**: {user_inputs['preferred_shapes']}
+    - **Font Style**: {user_inputs['preferred_font_style']}
+    - **Brand Tone**: {user_inputs['brand_tone']}
+    - **Important Details**:
+    1. Use a clean, modern, and sharp design with high contrast and clarity.
+    2. Incorporate unique iconography that reflects the company’s mission.
+    3. Ensure balance and alignment for a professional, polished appearance.
+    4. Avoid excessive details—focus on minimalism while maintaining a creative flair.
+    5. The logo should look scalable and usable on digital platforms and print.
+
+    Create a logo that communicates innovation, professionalism, and trust.
     """
 
     try:
@@ -38,19 +46,26 @@ def generate_logos(user_inputs):
             model="dall-e-3",
             prompt=prompt,
             size="1024x1024",
-            quality="standard",
-            n=1,
+            quality="hd",
+            n=1,  # Request 3 variations
         )
 
         image_url = response.data[0].url
         print("\n✅ Logo has been successfully generated.")
         print(f"\n🌐 Image URL: {image_url}")
 
-        # Save image URL to a file
-        with open("generated_logo_url.txt", "w") as file:
+        # Create folder "logos" if it doesn't exist
+        folder_path = "logos"
+        os.makedirs(folder_path, exist_ok=True)
+
+        # Save image URL to a file named after the company name
+        file_name = f"{user_inputs['company_name'].replace(' ', '_')}_logo_url.txt"
+        file_path = os.path.join(folder_path, file_name)
+
+        with open(file_path, "w") as file:
             file.write(image_url)
 
-        print(f"\n📁 Logo image URL saved to 'generated_logo_url.txt'.")
+        print(f"\n📁 Logo image URL saved to '{file_path}'.")
 
     except Exception as e:
         print(f"\n❌ Error generating logo: {e}")
