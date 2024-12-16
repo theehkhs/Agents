@@ -1,0 +1,205 @@
+Here's a complete example of a professional landing page for your company "Leratos Centuary". This will include the HTML structure, CSS styles, and JavaScript for interactivity.
+
+### 1. HTML Structure
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leratos Centuary - Beauty for a Sustainable Future</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Leratos Centuary</h1>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <h2>Your Beauty, Our Passion</h2>
+        <p>Embrace sustainability with products made for young, beautiful women.</p>
+        <a href="#services" class="cta-button">Discover More</a>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>At Leratos Centuary, we prioritize sustainability and friendly practices, ensuring that every product is as kind to the planet as it is to your beauty routine.</p>
+    </section>
+
+    <section id="services">
+        <h2>Our Services</h2>
+        <ul>
+            <li>Eco-friendly Beauty Products</li>
+            <li>Sustainable Skincare Solutions</li>
+            <li>Personalized Beauty Consultations</li>
+        </ul>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form id="contact-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Leratos Centuary. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+### 2. CSS Styles (styles.css)
+
+```css
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+}
+
+nav h1 {
+    color: #333;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+}
+
+#hero {
+    background: url('hero-bg.jpg') no-repeat center center/cover;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.cta-button {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form input, form textarea {
+    margin: 10px 0;
+    padding: 10px;
+    width: 80%;
+    max-width: 600px;
+}
+
+form button {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+@media (max-width: 600px) {
+    nav ul {
+        display: block;
+        margin: 20px 0;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+}
+```
+
+### 3. JavaScript for Interactivity (script.js)
+
+```javascript
+// Smooth scrolling for navigation links
+document.querySelectorAll('nav a').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        targetElement.scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Form validation
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    if (name && email && message) {
+        alert('Thank you for your message!');
+        this.reset();
+    } else {
+        alert('Please fill in all fields.');
+    }
+});
+```
+
+### Instructions
+
+1. **Create three files**: `index.html`, `styles.css`, and `script.js`.
+2. **Copy the corresponding code** sections into these files.
+3. **Add any required images** (like `hero-bg.jpg` for the hero section) or change the CSS background to only use a color if you don't have an image.
+4. **Open `index.html` in a web browser** to see the landing page in action. 
+
+Feel free to customize the content, styles, and images further to suit your brand!
