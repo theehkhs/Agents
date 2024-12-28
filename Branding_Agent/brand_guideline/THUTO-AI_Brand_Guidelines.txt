@@ -1,0 +1,31 @@
+# THUTO-AI BRANDING GUIDELINES
+**The documentation below acts as a guide to the representation of the THUTO-AI brand to ensure consistency, perpetuity and high standards of professionalism.**
+
+## MISSION
+To refine and innovate AI solutions to generate value for small businesses across the globe, while making artificial intelligence accessible, comprehensible, and practical for all.
+
+## VISION
+To set a hallmark in the Artificial Intelligence industry by empowering small businesses to simplify operations and augment efficiency for exponential growth through advanced, accessible technological solutions.
+
+## BRANDING GUIDELINES
+
+1. **Typography:**
+   The typographic choices for THUTO-AI are intended to be bold, clear, and professional. Our primary typeface is Arial, suited for all body texts to maintain consistency across different platforms. For headers, we suggest using Arial Bold to bring prominence and assertiveness. For any digital material, the font size should not dip below 12 pts for accessibility and legibility.
+
+2. **Color Palette:**
+   Our brand colors reflect our dedication to innovation, accessibility, and professionalism. The THUTO-AI color scheme includes:
+   - Primary Color: Deep Blue (#0000FF): Used on logos, headers, and other primary brand assets.
+   - Secondary Color: Light Gray (#D3D3D3): Used for body texts and as a background color for an easy-to-read interface.
+   - Accent Color: Bright Yellow (#FFFF00): Used sparingly for highlighting and call-to-action buttons.
+   
+3. **Logo usage:**
+   The THUTO-AI logo stands as an embodiment of our brand. For optimal legibility and visibility, always ensure the logo has sufficient space around it; this should be equal to half the width of the logo itself. The logo must never be modified or distorted and should always be used as it is. For darker backgrounds, use the white variant of the logo for visibility. Never place the logo on busy, patterned backgrounds.
+
+  
+## BRAND VOICE
+THUTO-AI embodies a professional voice that resonates with our target audience - the small businesses. Our communication is clear, concise, and straight to the point. Given the technical nature of our industry, we aim to use simple, jargon-free language to make our solutions graspable for non-tech savvy clients. We prioritize accessibility in our conversation, striving to empower through understanding. THUTO-AI speaks in an empathetic, supportive tone, acknowledging the challenges small businesses face and providing innovative solutions to help them overcome.
+
+## BRAND TONE
+The brand tone for THUTO-AI is professional and knowledgeable, reflecting our mastery in the Artificial Intelligence industry. However, we believe in balancing it with an approachable tone that emphasizes accessibility, making complex AI concepts understandable and usable for our small business clients. 
+
+Remember, the THUTO-AI brand is more than a name or logo; it represents our commitment to accessible AI for small businesses. Consistent adherence to these guidelines guarantees a unified, recognizable brand presence for THUTO-AI.

@@ -1,0 +1,54 @@
+BRAND GUIDELINES
+
+**1. Company Name:** Nqobile Baking
+
+**2. Mission:** We aim to provide baking for all, making it accessible, enjoyable, and rewarding.
+
+**3. Vision:** To make baking a nice experience, transforming it from a chore to a delightful activity, full of creativity and joy.
+
+**4. Values:** Our brand values revolve around Community, Self-worth, and High Quality. 
+
+---
+
+**A. Typography:**
+
+Our brand typography is meant to be clean, readable, and welcoming.
+
+- **Primary Typeface:** Open Sans. This font should be used for headings and anything that needs to stand out.
+- **Secondary Typeface:** Roboto. This font should be used for body text and any detailed information.
+
+---
+
+**B. Color Palette:**
+
+Our color palette is inspired by the colors of baking, representing warmth, comfort, and quality.
+
+- **Primary Colors:**
+   - Rich Cream (Hex Code: #FFFBF0)
+   - Warm Cocoa (Hex Code: #825201)
+- **Secondary Colors:**
+   - Toasted Almond (Hex Code: #FFB48F)
+   - Fresh Dough (Hex Code: #F5E6C8)
+
+---
+
+**C. Logo Usage:**
+
+Our logo represents our commitment to community, self-worth, and high-quality baking.
+
+- The logo should always be clear and fully visible.
+- Do not alter the logo's colors outside of the brand guidelines.
+- Maintain sufficient space around the logo to keep it distinct and uncluttered.
+- The logo should never be smaller than 1 inch in printed materials and 50px in digital formats.
+
+---
+
+**D. Brand Voice:**
+
+Our brand voice is friendly, accessible, and encouraging. We aim to inspire confidence in every individual’s ability to bake, no matter their level of expertise.
+
+- **Tone:** Casual yet informative. We aim to make baking feel approachable and enjoyable.
+- **Language:** Simple and understandable. We avoid complex jargon and prefer to use easy-to-understand baking terms.
+- **Messaging:** Empowering and positive. We believe in the power of baking to bring people together and boost self-worth. We consistently communicate this belief in our messaging.
+
+Remember, our brand guidelines serve to maintain consistency across all platforms and mediums. It's crucial to adhere to these guidelines to represent Nqobile Baking accurately and effectively.

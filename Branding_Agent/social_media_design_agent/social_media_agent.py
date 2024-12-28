@@ -55,7 +55,7 @@ def generate_banners(user_inputs):
             prompt=prompt,
             size="1024x1024",
             quality="hd",
-            n=1,  # Request 3 variations
+            n=3,  # Request 3 variations
         )
 
         image_url = response.data[0].url

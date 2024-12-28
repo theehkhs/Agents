@@ -26,7 +26,7 @@ def generate_streamed_guidelines(user_inputs):
 
     try:
         # Stream the response
-        print("\n⏳ Loading brand guidelines, please wait...\n")
+        print("\nLoading brand guidelines, please wait...\n")
         stream = client.chat.completions.create(
             model="gpt-4",  # Adjust the model as needed
             messages=[{"role": "user", "content": prompt}],
@@ -40,32 +40,32 @@ def generate_streamed_guidelines(user_inputs):
                 content = ""
             output += content
 
-        print("\n\n✅ All brand guidelines have been successfully loaded.")
+        print("\n\nAll brand guidelines have been successfully loaded.")
 
         # Save the output to a text file
         company_name = user_inputs.get("company_name", "Unknown_Company").replace(" ", "_")
         filename = f"{company_name}_Brand_Guidelines.txt"
 
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding='utf-8') as file:
             file.write(output)
 
-        print(f"\n📁 Brand guidelines saved to: {filename}")
-        print("\n✅ File has been successfully uploaded.")
+        print(f"\nBrand guidelines saved to: {filename}")
+        print("\nFile has been successfully uploaded.")
 
     except Exception as e:
-        print(f"\n❌ Error streaming brand guidelines: {e}")
+        print(f"\nError streaming brand guidelines: {e}")
 
 def main():
     """Main function to interactively collect user inputs and generate brand guidelines."""
-    print("\n💬 Welcome to the Brand Guidelines Generator!\n")
+    print("\nWelcome to the Brand Guidelines Generator!\n")
 
     # Collect user inputs interactively
     print("Please provide the following details about your company:\n")
-    company_name = input("User: 1. What is the name of your company? \nTHUTO: ").strip()
-    industry = input("User: 2. What industry does your company operate in? \nTHUTO: ").strip()
-    target_audience = input("User: 3. Who is your target audience? \nTHUTO: ").strip()
-    core_values = input("User: 4. What are your company's core values? (e.g., Innovation, Accessibility) \nTHUTO: ").strip()
-    brand_tone = input("User: 5. How would you describe your brand's tone? (e.g., Professional, Friendly) \nTHUTO: ").strip()
+    company_name = input("THUTO: What is the name of your company? (e.g., Mwanga Renewables, Thuto AI)\nUser: ").strip()
+    industry = input("THUTO: What industry does your company operate in? (e.g., Renewable Energy, Technology)\nUser: ").strip()
+    target_audience = input("THUTO: Who is your target audience? (e.g., Homeowners, Small Businesses)\nUser: ").strip()
+    core_values = input("THUTO: What are your company's core values? (e.g., Innovation, Accessibility, Sustainability)\nUser: ").strip()
+    brand_tone = input("THUTO: How would you describe your brand's tone? (e.g., Professional, Friendly, Approachable)\nUser: ").strip()
 
     # Organize inputs into a dictionary
     user_inputs = {

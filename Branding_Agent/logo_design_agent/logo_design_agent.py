@@ -2,6 +2,7 @@ import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv()
 
@@ -98,8 +99,8 @@ def main():
 
     # Collect user inputs interactively
     print("Please provide the following details for your logo design:\n")
-    company_name = input("THUTO: What is the name of your company? (e.g., Mwanga Renewables, Thuto AI)\nUser: ").strip()
-    industry = input("THUTO: What industry does your company operate in? (e.g., Renewable Energy, Technology)\nUser: ").strip()
+    company_name = input("THUTO: What is the name of your company?\nUser: ").strip()
+    industry = input("THUTO: What industry does your company operate in?\nUser: ").strip()
     mission_statement = input("THUTO: What is your company’s mission or core purpose? (e.g., Empowering small businesses with AI, Making renewable energy accessible)\nUser: ").strip()
     preferred_style = input("THUTO: What style do you prefer for the logo? (e.g., Minimalistic, Bold, Playful)\nUser: ").strip()
     main_color = input("THUTO: What is the primary color or color palette for your logo? (e.g., Blue, Green, Pastel shades)\nUser: ").strip()
