@@ -39,7 +39,10 @@ CORS(app, supports_credentials=True)
 
 client = OpenAI()
 
-# BrandGuidline Agent
+#==========================================================================================================================================================================
+# 1. Brand Agent
+
+# 1.1 BrandGuidline Agent
 def generate_brand_guidelines_content(data):
     """Generate structured brand guidelines content using OpenAI."""
     prompt = f"""
@@ -108,7 +111,7 @@ def generate_brand_guidelines_content(data):
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.6,
             max_tokens=4000
@@ -278,7 +281,7 @@ def generate_brand_guidelines():
         app.logger.error(f"Generation Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
     
-# Logo Designer Agent
+# 1.2 Logo Designer Agent
 UPLOAD_FOLDER = 'generated_logos'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -367,8 +370,9 @@ def download_logo(filename):
         return jsonify({'error': str(e)}), 500
 
 #==========================================================================================================================================================================
+# 2. Business Agent
 
-# Business Plan Agent
+# 2.1 Business Plan
 def generate_business_plan_content(data, client):
     """Generate detailed business plan content using OpenAI."""
     prompt = f"""
@@ -404,7 +408,7 @@ def generate_business_plan_content(data, client):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=4000
@@ -521,8 +525,7 @@ def generate_business_plan():
         }), 500
 
 
-#==========================================================================================================================================================================
-# Pitch Deck Agent
+# 2.2 Pitch Plan
 def generate_pitch_deck_content(data, client):
     """Generate detailed pitch deck content using OpenAI."""
     prompt = f"""
@@ -564,7 +567,7 @@ def generate_pitch_deck_content(data, client):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=4000
@@ -681,6 +684,492 @@ def generate_pitch_deck():
         return jsonify({
             'error': str(e)
         }), 500
+
+#==========================================================================================================================================================================
+# 3. Lawyer Agent
+
+# 3.1 Contract Generator
+def generate_contract_content(data):
+    """Generate professional legal contract content using OpenAI"""
+    print("\n[DEBUG] Starting contract content generation")
+    print(f"[DEBUG] Received data: {data}")
+    
+    prompt = f"""
+    Create a comprehensive legal contract document with strict formatting:
+
+    PARTIES:
+    First Party: {data['firstPartyName']}
+    Address: {data['firstPartyAddress']}
+    Contact: {data['firstPartyContact']}
+
+    Second Party: {data['secondPartyName']}
+    Address: {data['secondPartyAddress']}
+    Contact: {data['secondPartyContact']}
+
+    TERMS:
+    Effective Date: {data['effectiveDate']}
+    Jurisdiction: {data['jurisdiction']}
+    Contract Title: {data['contractTitle']}
+
+    STRUCTURE THE DOCUMENT WITH THESE SECTIONS:
+
+    SECTION: Purpose & Scope
+    ** Contract Purpose
+    - Detailed description of agreement purpose
+    - Business objectives
+    ** Scope of Work
+    - Clear boundaries of work
+    - Included/excluded services
+
+    SECTION: Terms & Obligations
+    ** First Party Responsibilities
+    - Key obligations
+    - Performance expectations
+    ** Second Party Responsibilities
+    - Key obligations
+    - Delivery requirements
+
+    SECTION: Financial Provisions
+    ** Payment Terms
+    - Payment schedule
+    - Late payment penalties
+    - Accepted payment methods
+    ** Taxes & Fees
+    - Responsibility allocation
+    - Reporting requirements
+
+    SECTION: Legal Clauses
+    ** Confidentiality
+    - Definition of confidential information
+    - Non-disclosure obligations
+    ** Termination
+    - Conditions for termination
+    - Notice requirements
+    ** Dispute Resolution
+    - Mediation/arbitration process
+    - Governing law reference
+
+    SECTION: General Provisions
+    ** Amendments
+    - Process for making changes
+    - Required approvals
+    ** Entire Agreement
+    - Supersedes prior agreements
+    - Modification requirements
+
+    FORMATTING RULES:
+    - Use SECTION: for main headers
+    - Use ** ** for subheaders
+    - Use - for bullet points
+    - Include relevant legal terminology
+    - Maintain professional contract structure
+    """
+
+    try:
+        print("[DEBUG] Sending request to OpenAI API")
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5,
+            max_tokens=4000
+        )
+        print("[DEBUG] Received response from OpenAI API")
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"[ERROR] OpenAI API Error: {str(e)}")
+        raise Exception(f"OpenAI API Error: {str(e)}")
+
+def create_contract_pdf(content, contract_title):
+    """Create professional contract PDF with legal formatting"""
+    print("\n[DEBUG] Starting PDF creation")
+    print(f"[DEBUG] Contract title: {contract_title}")
+    print(f"[DEBUG] Content length: {len(content)} characters")
+    
+    try:
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=40,
+            leftMargin=40,
+            topMargin=60,
+            bottomMargin=40
+        )
+
+        # Get default styles
+        styles = getSampleStyleSheet()
+        
+        # Modify existing styles instead of creating new ones
+        styles['Title'].fontSize = 22
+        styles['Title'].leading = 26
+        styles['Title'].alignment = 1
+        styles['Title'].textColor = '#2B3856'
+        styles['Title'].spaceAfter = 20
+
+        # Create new style names that don't conflict with defaults
+        styles.add(ParagraphStyle(
+            name='ContractSectionHeader',
+            parent=styles['Heading1'],
+            fontSize=14,
+            leading=18,
+            textColor='#2B3856',
+            spaceBefore=20,
+            spaceAfter=12,
+            fontName='Helvetica-Bold'
+        ))
+        
+        styles.add(ParagraphStyle(
+            name='ContractSubsectionHeader',
+            parent=styles['Heading2'],
+            fontSize=12,
+            leading=16,
+            textColor='#4F628E',
+            spaceBefore=15,
+            spaceAfter=8,
+            fontName='Helvetica-Bold'
+        ))
+        
+        # Modify existing BodyText style instead of redefining
+        styles['BodyText'].fontSize = 10
+        styles['BodyText'].leading = 13
+        styles['BodyText'].spaceAfter = 10
+        styles['BodyText'].textColor = '#333333'
+
+        elements = []
+        
+        # Title Page (using modified Title style)
+        elements.append(Paragraph("CONTRACT AGREEMENT", styles['Title']))
+        elements.append(Spacer(1, 0.5*inch))
+        elements.append(Paragraph(contract_title, styles['Title']))
+        elements.append(PageBreak())
+        
+        # Process Content
+        sections = content.split("SECTION:")[1:]  # Skip empty first element
+        
+        for section in sections:
+            if not section.strip():
+                continue
+                
+            lines = section.strip().split('\n')
+            section_title = lines[0].strip()
+            
+            elements.append(Paragraph(section_title, styles['ContractSectionHeader']))
+            
+            for line in lines[1:]:
+                line = line.strip()
+                if not line:
+                    continue
+                    
+                if line.startswith("**"):
+                    subsection = line.strip('*').strip()
+                    elements.append(Paragraph(subsection, styles['ContractSubsectionHeader']))
+                elif line.startswith("- "):
+                    elements.append(Paragraph(
+                        f"<bullet>&bull;</bullet> {line[2:]}", 
+                        styles['BodyText']
+                    ))
+                else:
+                    elements.append(Paragraph(line, styles['BodyText']))
+            
+            elements.append(PageBreak())
+
+        # Add signature blocks
+        elements.append(Paragraph("IN WITNESS WHEREOF", styles['ContractSectionHeader']))
+        elements.append(Spacer(1, 40))
+        elements.append(Paragraph(
+            f"_________________________<br/>First Party Signature<br/>{contract_title}",
+            styles['BodyText']
+        ))
+        elements.append(Spacer(1, 20))
+        elements.append(Paragraph(
+            f"_________________________<br/>Second Party Signature<br/>{contract_title}",
+            styles['BodyText']
+        ))
+
+        # Footer with page numbers
+        def add_footer(canvas, doc):
+            canvas.saveState()
+            canvas.setFont('Helvetica', 8)
+            canvas.drawString(40, 30, f"{contract_title} - Confidential")
+            canvas.drawRightString(letter[0]-40, 30, f"Page {doc.page}")
+            canvas.restoreState()
+
+        print("[DEBUG] Building PDF document")
+        doc.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)
+        buffer.seek(0)
+        
+        # Verify PDF content
+        pdf_content = buffer.getvalue()
+        if not pdf_content.startswith(b'%PDF'):
+            print("[ERROR] Invalid PDF content generated")
+            raise Exception("Failed to generate valid PDF content")
+            
+        print("[DEBUG] PDF created successfully")
+        return buffer
+    except Exception as e:
+        print(f"[ERROR] PDF creation failed: {str(e)}")
+        raise
+@app.route('/api/generate-contract', methods=['POST'])
+def generate_contract():
+    """Endpoint to generate legal contract PDF"""
+    print("\n[DEBUG] Received request to generate contract")
+    try:
+        data = request.json
+        print(f"[DEBUG] Request data: {data}")
+        
+        # Validate required fields
+        required_fields = [
+            'firstPartyName', 'firstPartyAddress', 'secondPartyName', 'secondPartyAddress',
+            'contractTitle', 'effectiveDate', 'jurisdiction'
+        ]
+        
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            error_msg = f'Missing required fields: {", ".join(missing_fields)}'
+            print(f"[ERROR] {error_msg}")
+            return jsonify({'error': error_msg}), 400
+
+        # Generate contract content
+        print("[DEBUG] Generating contract content")
+        contract_content = generate_contract_content(data)
+        print("[DEBUG] Contract content generated successfully")
+        
+        # Create PDF
+        print("[DEBUG] Creating PDF")
+        pdf_buffer = create_contract_pdf(contract_content, data['contractTitle'])
+        print("[DEBUG] PDF created successfully")
+        
+        # Return PDF
+        filename = f"{data['contractTitle'].replace(' ', '_')}_Contract.pdf"
+        print(f"[DEBUG] Returning PDF with filename: {filename}")
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Exception occurred: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+    
+# 3.2 NDA Generator 
+def generate_nda_content(data):
+    """Generate professional NDA content using OpenAI"""
+    prompt = f"""
+    Create a comprehensive Non-Disclosure Agreement (NDA) with strict formatting:
+
+    PARTIES:
+    Disclosing Party: {data['disclosingPartyName']}
+    Address: {data['disclosingPartyAddress']}
+    Contact: {data['disclosingPartyContact']}
+
+    Receiving Party: {data['receivingPartyName']}
+    Address: {data['receivingPartyAddress']}
+    Contact: {data['receivingPartyContact']}
+
+    CORE DETAILS:
+    Effective Date: {data['effectiveDate']}
+    Duration: {data['duration']}
+    Purpose: {data['purpose']}
+    Jurisdiction: {data['jurisdiction']}
+
+    STRUCTURE THE NDA WITH THESE SECTIONS:
+
+    SECTION: Confidential Information Definition
+    ** Scope of Confidential Information
+    - Precise definition
+    - Types of protected information
+    ** Exclusions
+    - Information not considered confidential
+
+    SECTION: Obligations of Receiving Party
+    ** Confidentiality Commitments
+    - Protection standards
+    - Non-disclosure requirements
+    ** Permitted Disclosures
+    - Exceptions to confidentiality
+    - Legal or regulatory requirements
+
+    SECTION: Use and Protection
+    ** Permitted Uses
+    - Specific allowed purposes
+    - Limitations on use
+    ** Security Measures
+    - Required protection standards
+    - Access restrictions
+
+    SECTION: Term and Termination
+    ** Agreement Duration
+    - Effective period
+    - Renewal conditions
+    ** Post-Termination Obligations
+    - Information return/destruction
+    - Continuing confidentiality
+
+    SECTION: Legal Provisions
+    ** Remedies
+    - Breach consequences
+    - Injunctive relief
+    ** Dispute Resolution
+    - Mediation/arbitration process
+    - Governing law
+
+    FORMATTING RULES:
+    - Use SECTION: for main headers
+    - Use ** ** for subheaders
+    - Use - for bullet points
+    - Include precise legal terminology
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5,
+            max_tokens=4000
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        raise Exception(f"OpenAI API Error: {str(e)}")
+
+def create_nda_pdf(content, nda_title):
+    """Create professional NDA PDF"""
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=letter,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=60,
+        bottomMargin=40
+    )
+
+    # Styles (similar to contract PDF creation)
+    styles = getSampleStyleSheet()
+    styles['Title'].fontSize = 22
+    styles['Title'].alignment = 1
+    
+    styles.add(ParagraphStyle(
+        name='NDASectionHeader',
+        parent=styles['Heading1'],
+        fontSize=14,
+        textColor='#2B3856',
+        spaceBefore=20,
+        spaceAfter=12
+    ))
+    
+    styles.add(ParagraphStyle(
+        name='NDASubsectionHeader',
+        parent=styles['Heading2'],
+        fontSize=12,
+        textColor='#4F628E',
+        spaceBefore=15,
+        spaceAfter=8
+    ))
+    
+    styles['BodyText'].fontSize = 10
+    styles['BodyText'].leading = 13
+
+    elements = []
+    
+    # Title Page
+    elements.append(Paragraph("NON-DISCLOSURE AGREEMENT", styles['Title']))
+    elements.append(Spacer(1, 0.5*inch))
+    elements.append(Paragraph(nda_title, styles['Title']))
+    elements.append(PageBreak())
+    
+    # Process Content
+    sections = content.split("SECTION:")[1:]
+    
+    for section in sections:
+        if not section.strip():
+            continue
+            
+        lines = section.strip().split('\n')
+        section_title = lines[0].strip()
+        
+        elements.append(Paragraph(section_title, styles['NDASectionHeader']))
+        
+        for line in lines[1:]:
+            line = line.strip()
+            if not line:
+                continue
+                
+            if line.startswith("**"):
+                subsection = line.strip('*').strip()
+                elements.append(Paragraph(subsection, styles['NDASubsectionHeader']))
+            elif line.startswith("- "):
+                elements.append(Paragraph(
+                    f"<bullet>&bull;</bullet> {line[2:]}", 
+                    styles['BodyText']
+                ))
+            else:
+                elements.append(Paragraph(line, styles['BodyText']))
+        
+        elements.append(PageBreak())
+
+    # Signature Blocks
+    elements.append(Paragraph("SIGNATURES", styles['NDASectionHeader']))
+    elements.append(Spacer(1, 40))
+    elements.append(Paragraph(
+        "_________________________<br/>Disclosing Party Signature<br/>Date: ________________",
+        styles['BodyText']
+    ))
+    elements.append(Spacer(1, 20))
+    elements.append(Paragraph(
+        "_________________________<br/>Receiving Party Signature<br/>Date: ________________",
+        styles['BodyText']
+    ))
+
+    # Footer with page numbers
+    def add_footer(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Helvetica', 8)
+        canvas.drawString(40, 30, f"{nda_title} - Confidential")
+        canvas.drawRightString(letter[0]-40, 30, f"Page {doc.page}")
+        canvas.restoreState()
+
+    doc.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)
+    buffer.seek(0)
+    return buffer
+
+@app.route('/api/generate-nda', methods=['POST'])
+def generate_nda():
+    """Endpoint to generate NDA PDF"""
+    try:
+        data = request.json
+        
+        # Validate required fields
+        required_fields = [
+            'disclosingPartyName', 'disclosingPartyAddress', 'disclosingPartyContact',
+            'receivingPartyName', 'receivingPartyAddress', 'receivingPartyContact',
+            'effectiveDate', 'duration', 'purpose', 'jurisdiction'
+        ]
+        
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
+
+        # Generate NDA content
+        nda_content = generate_nda_content(data)
+        
+        # Create PDF
+        pdf_buffer = create_nda_pdf(nda_content, "Non-Disclosure Agreement")
+        
+        # Return PDF
+        filename = "Non_Disclosure_Agreement.pdf"
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True,port=5000)

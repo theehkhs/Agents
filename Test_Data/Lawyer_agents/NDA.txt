@@ -1,0 +1,32 @@
+NDA GENERATOR TEST DATA
+
+PARTIES INFORMATION:
+Disclosing Party Name: TechInnovate Solutions Inc.
+Disclosing Party Address: 123 Silicon Valley Road, Mountain View, CA 94040
+Disclosing Party Contact: Jane Doe, Chief Innovation Officer, jane.doe@techinnovate.com
+
+Receiving Party Name: DataGuard Consulting LLC
+Receiving Party Address: 456 Cybersecurity Lane, San Francisco, CA 94105
+Receiving Party Contact: Michael Smith, Senior Partner, michael.smith@dataguard.com
+
+AGREEMENT DETAILS:
+Effective Date: January 24, 2025
+Duration: 2 years from the effective date
+Purpose: To evaluate potential strategic partnership and technology collaboration in AI-driven cybersecurity solutions
+Jurisdiction: State of California, United States
+
+CONFIDENTIAL INFORMATION:
+Confidential Information Definition: Confidential Information includes all proprietary technology, business strategies, financial data, customer lists, source code, and any materials marked 'Confidential' exchanged during discussions.
+Exclusions: Excludes information that: (a) is publicly available, (b) was known prior to disclosure, (c) is independently developed, or (d) is received from a third party without breach of confidentiality.
+Return of Information: All confidential materials must be returned or destroyed within 30 days of agreement termination, with written confirmation provided.
+
+OBLIGATIONS:
+Receiving Party Obligations: Receiving party must maintain strict confidentiality, using same care as protecting own sensitive information. Access limited to key personnel on a need-to-know basis.
+Permitted Uses: Confidential information may only be used for evaluating potential partnership. No commercial exploitation or reproduction allowed.
+Security Measures: Information must be stored securely with encryption, access controls, and protection against unauthorized digital or physical access.
+
+LEGAL TERMS:
+Remedies: Breach results in immediate injunctive relief, potential monetary damages up to $500,000, and legal cost recovery.
+Dispute Resolution: Disputes resolved through binding arbitration in San Francisco, California, following American Arbitration Association rules.
+Governing Law: State of California
+Surviving Obligations: Confidentiality obligations survive for 5 years following agreement termination.
