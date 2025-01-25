@@ -1,8 +1,0 @@
-THOUGHTS
-    -Playing with these agents I realise that website generation requires proper planning and execustion. I 
-    layed out the foundation and will need a ste approach.
-    1.Create website.
-    2.Communicate to with teh website.
-
-    So far I have created that enables for creeation of wbesite just need to store the deatils that have been
-    created and enable for a way of of constant communication 

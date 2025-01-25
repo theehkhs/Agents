@@ -39,83 +39,245 @@ CORS(app, supports_credentials=True)
 
 client = OpenAI()
 
-# Brand Guidleine Agent
-def generate_brand_guidelines(user_inputs):
-    """
-    Generates professional brand guidelines based on user inputs.
-    
-    Args:
-        user_inputs (dict): Dictionary containing brand information
-        
-    Returns:
-        str: Generated brand guidelines
-    """
+# BrandGuidline Agent
+def generate_brand_guidelines_content(data):
+    """Generate structured brand guidelines content using OpenAI."""
     prompt = f"""
-    You are an expert branding consultant. Generate professional brand guidelines based on the following inputs:
-    Company Name: {user_inputs.get('brandName')}
-    Mission: {user_inputs.get('brandMission')}
-    Vision: {user_inputs.get('brandVision')}
-    Values: {user_inputs.get('brandValues')}
-    
-    Include sections like typography, color palette, logo usage, and brand voice.
-    """
+    Create comprehensive brand guidelines for {data['brandName']} with strict formatting:
 
+    BRAND OVERVIEW:
+    - Mission: {data['brandMission']}
+    - Vision: {data['brandVision']}
+    - Core Values: {data['brandValues']}
+
+    Include these sections with exact formatting:
+    
+    SECTION: Brand Identity
+    ** Logo Usage
+    - Primary logo specifications
+    - Clear space requirements
+    - Minimum size limits
+    - Incorrect usage examples
+    
+    SECTION: Visual Guidelines
+    ** Color Palette
+    - Primary brand colors (HEX/RGB/CMYK)
+    - Secondary colors
+    - Color combinations
+    ** Typography
+    - Primary typeface
+    - Secondary typeface
+    - Heading styles
+    - Body text styles
+    
+    SECTION: Tone of Voice
+    ** Brand Personality
+    - Key characteristics
+    - Communication style
+    ** Messaging
+    - Tagline usage
+    - Value propositions
+    - Customer communication
+    
+    SECTION: Brand Application
+    ** Digital
+    - Website guidelines
+    - Social media rules
+    ** Print
+    - Business card specs
+    - Letterhead design
+    ** Environmental
+    - Signage standards
+    - Packaging design
+    
+    SECTION: Governance
+    ** Approval Process
+    - Asset request workflow
+    - Review timeline
+    ** Compliance
+    - Monitoring process
+    - Violation reporting
+
+    Formatting rules:
+    - Use SECTION: for main headers
+    - Use ** ** for subheaders
+    - Use - for bullet points
+    - Empty line between paragraphs
+    - No markdown formatting
+    """
+    
     try:
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=2000
+            temperature=0.6,
+            max_tokens=4000
         )
-        
         return response.choices[0].message.content
     except Exception as e:
-        return str(e)
+        raise Exception(f"OpenAI API Error: {str(e)}")
 
-@app.route('/api/generate-guidelines', methods=['POST'])
-def create_guidelines():
-    """API endpoint to generate brand guidelines"""
-    print("we are printing the value.")
+def create_pdf(content, brand_name):
+    """Create professionally formatted PDF with enhanced styling"""
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=letter,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=50,
+        bottomMargin=40
+    )
+
+    # Custom styles
+    styles = getSampleStyleSheet()
+    
+    # Title Page Style
+    styles.add(ParagraphStyle(
+        name='TitlePage',
+        parent=styles['Title'],
+        fontSize=28,
+        leading=32,
+        spaceAfter=20,
+        alignment=1,
+        textColor='#2B3856',
+        fontName='Helvetica-Bold'
+    ))
+    
+    # Section Header
+    styles.add(ParagraphStyle(
+        name='SectionHeader',
+        parent=styles['Heading1'],
+        fontSize=18,
+        leading=22,
+        textColor='#2B3856',
+        spaceBefore=30,
+        spaceAfter=15,
+        fontName='Helvetica-Bold'
+    ))
+    
+    # Subsection Header
+    styles.add(ParagraphStyle(
+        name='SubsectionHeader',
+        parent=styles['Heading2'],
+        fontSize=14,
+        leading=18,
+        textColor='#4F628E',
+        spaceBefore=20,
+        spaceAfter=10,
+        fontName='Helvetica-Bold'
+    ))
+    
+    # Body Text
+    styles.add(ParagraphStyle(
+        name='BodyText',
+        parent=styles['Normal'],
+        fontSize=11,
+        leading=15,
+        spaceAfter=8,
+        textColor='#333333'
+    ))
+    
+    # Bullet Style
+    styles.add(ParagraphStyle(
+        name='BulletText',
+        parent=styles['BodyText'],
+        firstLineIndent=-12,
+        leftIndent=12,
+        bulletIndent=0,
+        spaceBefore=4
+    ))
+
+    elements = []
+    
+    # Title Page
+    elements.append(Paragraph(brand_name, styles['TitlePage']))
+    elements.append(Spacer(1, 0.5*inch))
+    elements.append(Paragraph("Brand Guidelines", styles['TitlePage']))
+    elements.append(Spacer(1, inch))
+    elements.append(Paragraph(f"Effective Date: {datetime.now().strftime('%B %d, %Y')}", styles['BodyText']))
+    elements.append(PageBreak())
+    
+    # Process Content
+    sections = content.split("SECTION:")[1:]  # Skip empty first element
+    
+    for section in sections:
+        if not section.strip():
+            continue
+            
+        lines = section.strip().split('\n')
+        section_title = lines[0].strip()
+        
+        # Add section header
+        elements.append(Paragraph(section_title, styles['SectionHeader']))
+        
+        for line in lines[1:]:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Handle subsections
+            if line.startswith("**"):
+                subsection = line.strip('*').strip()
+                elements.append(Paragraph(subsection, styles['SubsectionHeader']))
+            # Handle bullet points
+            elif line.startswith("- "):
+                elements.append(Paragraph(
+                    f"<bullet>&bull;</bullet> {line[2:]}", 
+                    styles['BulletText']
+                ))
+            # Handle regular paragraphs
+            else:
+                elements.append(Paragraph(line, styles['BodyText']))
+        
+        elements.append(Spacer(1, 15))
+        elements.append(PageBreak())
+
+    # Footer with page numbers
+    def add_footer(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Helvetica', 8)
+        canvas.drawString(40, 30, f"{brand_name} Brand Guidelines")
+        canvas.drawRightString(letter[0]-40, 30, f"Page {doc.page}")
+        canvas.restoreState()
+
+    doc.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)
+    buffer.seek(0)
+    return buffer
+
+@app.route('/api/generate-brand-guidelines', methods=['POST'])
+def generate_brand_guidelines():
+    """Endpoint to generate brand guidelines PDF"""
     try:
         data = request.json
         
         # Validate required fields
         required_fields = ['brandName', 'brandMission', 'brandVision', 'brandValues']
-        for field in required_fields:
-            if not data.get(field):
-                return jsonify({
-                    'error': f'Missing required field: {field}'
-                }), 400
-
-        # Generate guidelines
-        guidelines = generate_brand_guidelines(data)
+        missing_fields = [field for field in required_fields if not data.get(field)]
         
-        # Save to file
-        filename = f"{data['brandName'].replace(' ', '_')}_Brand_Guidelines.txt"
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(guidelines)
-            
-        return jsonify({
-            'success': True,
-            'message': 'Brand guidelines generated successfully',
-            'guidelines': guidelines,
-            'filename': filename
-        })
+        if missing_fields:
+            return jsonify({
+                'error': f'Missing required fields: {", ".join(missing_fields)}'
+            }), 400
+
+        # Generate content
+        guidelines_content = generate_brand_guidelines_content(data)
+        
+        # Create PDF
+        pdf_buffer = create_pdf(guidelines_content, data['brandName'])
+        
+        # Return PDF
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"{data['brandName'].replace(' ', '_')}_Brand_Guidelines.pdf"
+        )
 
     except Exception as e:
-        return jsonify({
-            'error': str(e)
-        }), 500
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({
-        'status': 'healthy',
-        'message': 'Brand guidelines service is running'
-    })
-
-
+        app.logger.error(f"Generation Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    
 # Logo Designer Agent
 UPLOAD_FOLDER = 'generated_logos'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
